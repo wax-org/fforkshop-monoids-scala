@@ -1,4 +1,4 @@
-name := "Functional Forshop - Monoids"
+name := "Functional Forkshop - Monoids"
 
 scalacOptions += "-Ypartial-unification"
 
