@@ -1,7 +1,6 @@
 package wax.exercise.fibonacci
 
 import cats.Monoid
-import wax.exercise.fibonacci.ExpUtils.exp
 import wax.utils.Benchmark
 
 import scala.math.BigInt._
@@ -25,9 +24,22 @@ object Main extends App {
 
 object Fib {
 
+  implicit val matrixMonoid: Monoid[Matrix2x2] = new Monoid[Matrix2x2] {
+    override def empty: Matrix2x2 = ???
+
+    override def combine(x: Matrix2x2, y: Matrix2x2): Matrix2x2 = ???
+  }
+
+  def exp[T: Monoid](n: T, power: BigInt): T = ???
+
   case class Matrix2x2(a11: BigInt, a12: BigInt, a21: BigInt, a22: BigInt)
 
-  implicit val matrixMonoid: Monoid[Matrix2x2] = ???
+  object Matrix2x2 {
+    def mult(x: Matrix2x2, y: Matrix2x2) = new Matrix2x2(
+      x.a11 * y.a11 + x.a12 * y.a21, x.a11 * y.a12 + x.a12 * y.a22,
+      x.a21 * y.a11 + x.a22 * y.a21, x.a21 * y.a12 + x.a22 * y.a22
+    )
+  }
 
   def fibOtEn(en: BigInt): BigInt = exp(
     Matrix2x2(
@@ -39,36 +51,12 @@ object Fib {
 
   private val Zero = BigInt(0)
   def fibTailRec(en: BigInt): BigInt = {
+    @scala.annotation.tailrec
     def secretWeapon(n: BigInt, a: BigInt, b: BigInt): BigInt = n match {
       case Zero => a
       case _    => secretWeapon(n - 1, b, a + b)
     }
 
     secretWeapon(en, 0, 1)
-  }
-}
-
-
-object ExpUtils {
-  def exp[T: Monoid](n: T, power: BigInt): T =
-    if (power < 0) throw new IllegalArgumentException("Something sad happened")
-    else if (power == 0) Monoid.empty
-    else if (power == 1) n
-    //                power/2
-    //n^power = (n^2)^
-    else if (power % 2 == 0) ExpUtils.exp(Monoid.combine(n, n), power / 2)
-    //                    (power-1)/2
-    //n^power = n * (n^2)^
-    else Monoid.combine(n, ExpUtils.exp(Monoid.combine(n, n), (power - 1) / 2))
-
-  def expTailRec[T: Monoid](n: T, power: Int): T = {
-    def exp(y: T, x: T, n: BigInt): T =
-      if (power < 0) throw new IllegalArgumentException("Something sad happened")
-      else if (power == 0) y
-      else if (power == 1) Monoid.combine(x, y)
-      else if (power % 2 == 0) exp(y, Monoid.combine(x, x), power / 2)
-      else exp(Monoid.combine(x, y), Monoid.combine(x, x), (power - 1) / 2)
-
-    exp(Monoid.empty[T], n, power)
   }
 }
