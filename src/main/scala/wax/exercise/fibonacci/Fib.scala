@@ -30,7 +30,7 @@ object Fib {
     override def combine(x: Matrix2x2, y: Matrix2x2): Matrix2x2 = ???
   }
 
-  def exp[T: Monoid](n: T, power: BigInt): T = ???
+  def exp[T: Monoid](a: T, n: BigInt): T = ???
 
   case class Matrix2x2(a11: BigInt, a12: BigInt, a21: BigInt, a22: BigInt)
 
