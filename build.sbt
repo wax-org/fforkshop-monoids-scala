@@ -1,5 +1,7 @@
 name := "Functional Forkshop - Monoids"
 
+ThisBuild / scalaVersion := "2.12.7"
+
 scalacOptions += "-Ypartial-unification"
 
 // Main dependencies
